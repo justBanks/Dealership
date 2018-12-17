@@ -1,0 +1,26 @@
+﻿a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+nav {
+    background: url(../images/home-hero-bg.svg),linear-gradient(180deg,#7014e8 30.12%,#0e5ecf 192.47%);
+}
+
+.navbar-brand{
+    margin-left: 35%;
+}
+
+html {
+    font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}

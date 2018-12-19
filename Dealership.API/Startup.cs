@@ -21,6 +21,7 @@ namespace Dealership.API
             services.AddMvc();
 
             services.AddAuthentication("bearer")
+                .AddJwtBearer()
                 .AddIdentityServerAuthentication("bearer", options =>
                 {
                     options.Authority = "http://localhost:5000";

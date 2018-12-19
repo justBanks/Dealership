@@ -1,0 +1,20 @@
+﻿@model Dealership.MvcClient.ViewModels.DefaultViewModel
+
+<div class="row">
+    <div class="col-xs-12">
+        <h2>Find your vehicle</h2>
+        <p>&nbsp;</p>
+        @if (!Model.IsAuthorized)
+        {
+            <a class="btn btn-default" asp-action="Authorize">Authorize</a>
+        }
+        <a class="btn btn-primary" asp-action="Search">Search</a>
+
+        @if (!Model.IsAuthorized)
+        {
+            <footer style="margin-top:100px;">
+                <pre>@Model.DebugMessage</pre>
+            </footer>
+        }
+        </div>
+</div>

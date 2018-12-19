@@ -51,11 +51,11 @@ namespace AuthorizationServer
                 {
                     ClientId = "simple_client",
                     ClientName = "Vehicles Client (auth code)",
-                    AllowedScopes = {"vehicles_api.read", "vehicles_api.admin"},
-                    AccessTokenType = AccessTokenType.Reference,
-                    AllowedGrantTypes = GrantTypes.Code,
-                    RedirectUris = {"http://localhost:50375/callback"},
                     ClientSecrets = {new Secret("secret".Sha256())},
+                    AllowedScopes = {"vehicles_api.read", "vehicles_api.admin"},
+                    AccessTokenType = AccessTokenType.Jwt,
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RedirectUris = {"http://localhost:5001/callback"},
                     AllowOfflineAccess = true
                 },
                 new Client
@@ -63,27 +63,27 @@ namespace AuthorizationServer
                     ClientId = "implicit_client",
                     ClientName = "Implicit OAuth Client",
                     AllowedScopes = {"vehicles_api.read", "vehicles_api.admin"},
-                    AccessTokenType = AccessTokenType.Reference,
+                    AccessTokenType = AccessTokenType.Jwt,
                     AllowedGrantTypes = GrantTypes.Implicit,
-                    RedirectUris = {"http://localhost:50375/callback.html"},
-                    AllowedCorsOrigins = {"http://localhost:50375"},
+                    RedirectUris = {"http://localhost:5001/callback.html"},
+                    AllowedCorsOrigins = {"http://localhost:5001"},
                     AllowAccessTokensViaBrowser = true
                 },
                 new Client
                 {
                     ClientId = "clientcreds_client",
                     ClientName = "Client Credentials OAuth Client",
+                    ClientSecrets = {new Secret("secret".Sha256())},
                     AllowedScopes = {"vehicles_api.read", "vehicles_api.admin"},
-                    AccessTokenType = AccessTokenType.Reference,
+                    AccessTokenType = AccessTokenType.Jwt,
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = {new Secret("secret".Sha256())}
                 },
                 new Client
                 {
                     ClientId = "native_client",
                     ClientName = "Windows Native Client",
                     AllowedScopes = { "vehicles_api.read", "vehicles_api.admin" },
-                    AccessTokenType = AccessTokenType.Reference,
+                    AccessTokenType = AccessTokenType.Jwt,
                     AllowedGrantTypes = GrantTypes.Code,
                     RedirectUris = {"com.windows:/callback"},
                     RequireClientSecret = false,
@@ -93,11 +93,11 @@ namespace AuthorizationServer
                 {
                     ClientId = "oidc_client",
                     ClientName = "OpenID Connect Client",
+                    ClientSecrets = {new Secret("secret".Sha256())},
                     AllowedScopes = {"openid", "profile","email", "vehicles_api.read", "vehicles_api.admin"},
                     AccessTokenType = AccessTokenType.Reference,
                     AllowedGrantTypes = GrantTypes.Hybrid,
-                    RedirectUris = {"http://localhost:5005/signin-oidc"},
-                    ClientSecrets = {new Secret("secret".Sha256())}
+                    RedirectUris = {"http://localhost:5001/signin-oidc"},
                 }
             };
         }

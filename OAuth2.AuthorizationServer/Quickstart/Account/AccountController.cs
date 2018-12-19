@@ -35,18 +35,15 @@ namespace AuthorizationServer
             this.schemeProvider = schemeProvider;
             this.events = events;
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {
-            await events.RaiseAsync(new UserLoginSuccessEvent("test-user", "A0E6dj8439md43k892d48s37d9js21", "test-user"));
-            return Redirect(returnUrl);
-
             var vm = await BuildLoginViewModelAsync(returnUrl);
-            if (vm.IsExternalLoginOnly) return RedirectToAction("Challenge", "External", new {provider = vm.ExternalLoginScheme, returnUrl});
+            if (vm.IsExternalLoginOnly) return RedirectToAction("Challenge", "External", new { provider = vm.ExternalLoginScheme, returnUrl });
             return View(vm);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginInputModel model, string button)
@@ -75,7 +72,7 @@ namespace AuthorizationServer
                     if (context != null)
                     {
                         if (await clientStore.IsPkceClientAsync(context.ClientId))
-                            return View("Redirect", new RedirectViewModel {RedirectUrl = model.ReturnUrl});
+                            return View("Redirect", new RedirectViewModel { RedirectUrl = model.ReturnUrl });
                         return Redirect(model.ReturnUrl);
                     }
 
@@ -99,7 +96,7 @@ namespace AuthorizationServer
             return View("LoggedOut");
         }
 
-        
+
         private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
         {
             var context = await interaction.GetAuthorizationContextAsync(returnUrl);
@@ -108,13 +105,13 @@ namespace AuthorizationServer
                 return new LoginViewModel
                 {
                     Parameters = context.Parameters,
-                    EnableLocalLogin = true,
+                    EnableLocalLogin = false,
                     ReturnUrl = returnUrl,
                     Username = context.LoginHint,
                     ExternalProviders = new[] { new ExternalProvider { AuthenticationScheme = context.IdP } }
                 };
             }
-            
+
             var schemes = await schemeProvider.GetAllSchemesAsync();
 
             var providers = schemes
@@ -125,7 +122,7 @@ namespace AuthorizationServer
                     AuthenticationScheme = x.Name
                 }).ToList();
 
-            providers.Add(new ExternalProvider{AuthenticationScheme = "test", DisplayName = "TEST"});
+            providers.Add(new ExternalProvider { AuthenticationScheme = "test", DisplayName = "TEST" });
 
             if (context?.ClientId != null)
             {

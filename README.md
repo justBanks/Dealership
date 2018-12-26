@@ -16,6 +16,8 @@ The OAuth implementation demonstrates the full redirect flow for obtaining an ac
 
 ![img](/options.png "Startup projects")
 
+- The project targets version 2.2 of ASP.NET Core&mdash;hopefully this won't cause issues for anyone 
+
 ## Notes
 In the documentation, the Car Options list includes _automatic transmission,_ which is omitted in the sample data. I took this as an oversight and included it in the model.
 

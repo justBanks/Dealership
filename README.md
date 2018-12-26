@@ -27,7 +27,7 @@ For the sake of expediency, several tradeoffs were made:
 - Implementing OAuth2 using a React front end proved to be a big chore, so ASP.NET MVC was used instead
 - The data reposiory uses an in-memory data store
 - A proper Entity Framework implementation was abandoned, along with a thorough dependency graph with my usual abstractions (such as IContext and IRepository)
-- In a typical work setting, I always take the time to ask clarifying questions when there is ambiguity in my mind about any requirement 
+- In a typical work setting, I always take the time to get clarification when there is ambiguity in my mind about any requirement 
 
 Postman collection for testing the API:  
 Import https://www.getpostman.com/collections/87ea3d0c3a2c4f2cff4b

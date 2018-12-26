@@ -1,20 +1,100 @@
-﻿@model Dealership.MvcClient.ViewModels.DefaultViewModel
+﻿@model Dealership.MvcClient.ViewModels.HomeViewModel
 
-<div class="row">
-    <div class="col-xs-12">
-        <h2>Find your vehicle</h2>
-        <p>&nbsp;</p>
-        @if (!Model.IsAuthorized)
-        {
-            <a class="btn btn-default" asp-action="Authorize">Authorize</a>
-        }
-        <a class="btn btn-primary" asp-action="Search">Search</a>
+@if (Model.IsAuthorized)
+{
+    <div class="row">
+        @*<div name="searchPane" class="col-xs-5">*@
+            <h2>Find your vehicle</h2>
+            <p>&nbsp;</p>
+            <form name="vehicleSearch" method="post" onsubmit="Search">
+                <p>
+                    <div>
+                        <label style="float:left">Color &nbsp;</label>
+                        <select name="color" class="form-control" style="width:156px;">
+                            <option></option>
+                            <option value="Red">Red</option>
+                            <option value="White">White</option>
+                            <option value="Gray">Gray</option>
+                            <option value="Silver">Silver</option>
+                            <option value="Black">Black</option>
+                        </select>
+                    </div>
+                </p>
+                <p style="margin-top:20px">
+                    <label class="switch">
+                        <input type="checkbox" name="hasAutomaticTransmission" />
+                        <span class="slider round"></span>
+                    </label>
+                    <label>&nbsp;Automatic Transmission</label>
+                </p>
 
-        @if (!Model.IsAuthorized)
-        {
-            <footer style="margin-top:100px;">
-                <pre>@Model.DebugMessage</pre>
-            </footer>
-        }
-        </div>
-</div>
+                <p>
+                    <label class="switch">
+                        <input type="checkbox" name="hasSunroof" />
+                        <span class="slider round"></span>
+                    </label>
+                    <label>&nbsp;Sunroof</label>
+                </p>
+
+                <p>
+                    <label class="switch">
+                        <input type="checkbox" name="isFourWheelDrive" />
+                        <span class="slider round"></span>
+                    </label>
+                    <label>&nbsp;4-Wheel Drive</label>
+                </p>
+
+                <p>
+                    <label class="switch">
+                        <input type="checkbox" name="hasLowMiles" />
+                        <span class="slider round"></span>
+                    </label>
+                    <label>&nbsp;Low Miles</label>
+                </p>
+
+                <p>
+                    <label class="switch">
+                        <input type="checkbox" name="hasPowerWindows" />
+                        <span class="slider round"></span>
+                    </label>
+                    <label>&nbsp;Power Windows</label>
+                </p>
+
+                <p>
+                    <label class="switch">
+                        <input type="checkbox" name="hasNavigation" />
+                        <span class="slider round"></span>
+                    </label>
+                    <label>&nbsp;Navigation</label>
+                </p>
+
+                <p>
+                    <label class="switch">
+                        <input type="checkbox" name="hasHeatedSeats" />
+                        <span class="slider round"></span>
+                    </label>
+                    <label>&nbsp;Heated Seats</label>
+                </p>
+                <p style="margin-left:70px; width:230px">
+                    <label>Mileage not to exceed</label>&nbsp;
+                    <input name="milesLimit" type="number" min="1" max="1000000" class="form-control">
+                </p>
+                <p style="margin:20px 0 0 80px">
+                    <input type="submit" value="Search" class="btn btn-lg btn-primary" asp-action="Search" />
+                </p>
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            </form>
+        @*</div>*@
+
+        @*<div name="searchResults" class="col-xs-7">
+        </div>*@
+    </div>
+}
+
+<footer style="margin-top:50px;">
+    @if (!Model.IsAuthorized)
+    {
+        <pre>@Model.DebugMessage</pre>
+        <a class="btn btn-lg btn-success" asp-action="Authorize">Authorize</a>
+    }
+</footer>

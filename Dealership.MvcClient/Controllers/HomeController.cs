@@ -1,15 +1,19 @@
-﻿using IdentityModel;
+﻿using Dealership.API.Entities;
+using Dealership.API.Repositories;
+using Dealership.MvcClient.ViewModels;
+using IdentityModel;
 using IdentityModel.Client;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Dealership.MvcClient.ViewModels;
 
 namespace Dealership.MvcClient.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private static string Message { get; set; } = "";
         private static string Code { get; set; }
@@ -21,29 +25,29 @@ namespace Dealership.MvcClient.Controllers
 
         public IActionResult Index()
         {
-            
             if (!LoginAttempted)
             {
                 LoginAttempted = true;
                 return Authorize();
             }
 
-            var model = new DefaultViewModel
+            var model = new HomeViewModel
             {
                 DebugMessage = Message,
                 IsAuthorized = !string.IsNullOrEmpty(Token)
             };
+            
             return View("Index", model);
         }
 
-        private const string ClientId = "simple_client";
-        private const string ClientSecret = "secret";
+        private string ClientId = Startup.Configuration["ClientCredentials:client_id"];
+        private string ClientSecret = Startup.Configuration["ClientCredentials:secret"];
         private const string RedirectUri = "http://localhost:5001/callback";
 
         public IActionResult Authorize()
         {
             var authUrl =
-                $"http://localhost:5000/connect/authorize?client_id={ClientId}&scope=vehicles_api.read offline_access&redirect_uri={RedirectUri}&response_type=code&response_mode=query&state={State}";
+                $"{authBaseUrl}/authorize?client_id={ClientId}&scope=vehicles_api.read&redirect_uri={RedirectUri}&response_type=code&response_mode=query&state={State}";
 
             Message += $"Redirecting to authorization endpoint. State value of: {State}";
             Message += $"\nURL: {authUrl}";
@@ -79,7 +83,7 @@ namespace Dealership.MvcClient.Controllers
             }
 
             Message += "\n\nCalling token endpoint...";
-            var tokenClient = new TokenClient("http://localhost:5000/connect/token", ClientId, ClientSecret);
+            var tokenClient = new TokenClient($"{authBaseUrl}/token", ClientId, ClientSecret);
             var tokenResponse = await tokenClient.RequestAuthorizationCodeAsync(Code, RedirectUri);
 
             if (tokenResponse.IsError)
@@ -100,14 +104,13 @@ namespace Dealership.MvcClient.Controllers
 
         public async Task<IActionResult> CallApi()
         {
-            var httpClient = new HttpClient();
             if (Token != null)
             {
                 Message += $"\n\nCalling API with Authorization header: {TokenType} {Token}";
-                httpClient.SetBearerToken(Token);
+                client.SetBearerToken(Token);
             }
 
-            var response = await httpClient.GetAsync("http://localhost:52366/api/vehicles");
+            var response = await client.GetAsync($"{apiBaseUrl}/vehicles");
 
             if (response.IsSuccessStatusCode) Message += "\nAPI access authorized!";
             else if (response.StatusCode == HttpStatusCode.Unauthorized) Message += "\nUnable to contact API: Unauthorized!";
@@ -115,5 +118,38 @@ namespace Dealership.MvcClient.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> Search(VehicleSearchModel searchTerms)
+        {
+            if (!ModelState.IsValid)
+                return View(new SearchViewModel { Error = ModelState.Root.Errors[0] });
+
+            client.SetBearerToken(Token);
+            HttpResponseMessage response = await 
+                client.PostAsJsonAsync(
+                    $"{apiBaseUrl}/vehicles", 
+                    searchTerms);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string content = await response.Content.ReadAsStringAsync();
+                var vehicles = JsonConvert.DeserializeObject<List<Vehicle>>(content);
+
+                var model = new SearchViewModel();
+                model.Search = searchTerms;
+                model.Vehicles = vehicles;
+                return View(model);
+            }
+            else
+            {
+                return View(
+                    "Error",
+                    new ErrorViewModel {
+                        RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                        Message = response.ReasonPhrase
+                    });
+            }
+        }
     }
+
 }

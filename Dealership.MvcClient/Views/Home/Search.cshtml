@@ -1,0 +1,46 @@
+﻿@model Dealership.MvcClient.ViewModels.SearchViewModel
+
+@{
+    ViewData["Title"] = "Your search results";
+}
+
+<h3 style="margin-bottom:20px;">Search Results</h3>
+@if(Model.Error != null) { <h4 class="text-danger">@Model.Error.ErrorMessage</h4> }
+<div class="col-sm-6 col-md-6 col-lg-6" style="display: inline-block;">
+    @foreach (var item in Model.Vehicles)
+    {
+        <div class="card">
+            <dl>
+                <dt>
+                    @item.Year @item.Make @if (item.Color != null)
+                    {@string.Format(" - {0}", item.Color)}
+                </dt>
+                <dd>@item.Mileage.ToString("N0") miles</dd>
+                <dd>@item.Price.ToString("C0")</dd>
+                @if (item.HasAutomaticTransmission)
+                { <dd>Automatic Transmission</dd> }
+                else
+                {  <dd> Manual Transmission </dd> }
+
+                @if (Model.Search.IsFourWheelDrive == "on")
+                {
+                    <dd>4-Wheel Drive</dd>}
+                @if (Model.Search.HasPowerWindows == "on")
+                {
+                    <dd>Power Windows</dd>}
+                @if (Model.Search.HasNavigation == "on")
+                {
+                    <dd>Navigation</dd>}
+                @if (Model.Search.HasHeatedSeats == "on")
+                {
+                    <dd>Heated Seats</dd>}
+                @if (Model.Search.HasSunroof == "on")
+                {
+                    <dd>Sunroof</dd>}
+            </dl>
+        </div>
+    }
+</div>
+<div class="col-lg-12">
+    <button class="btn btn-default" onclick="window.history.back();">Go Back</button>
+</div>

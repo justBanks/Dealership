@@ -17,7 +17,7 @@ The OAuth implementation demonstrates the full redirect flow for obtaining an ac
 ![img](/options.png "Startup projects")
 
 ## Notes
-The Car Options list includes automatic transmission, which is omitted in the sample data. I took this as an oversight and included it in the model.
+In the documentation, the Car Options list includes _automatic transmission,_ which is omitted in the sample data. I took this as an oversight and included it in the model.
 
 When the automatic transmission option is selected, records are filtered accordingly; all transmission types are returned otherwise.
 

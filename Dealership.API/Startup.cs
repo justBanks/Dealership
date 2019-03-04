@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using IdentityServer4.AccessTokenValidation;
+using Dealership.API.Controllers;
+using Dealership.API.Repositories;
 
 namespace Dealership.API
 {
@@ -46,6 +48,8 @@ namespace Dealership.API
             DealershipConnectionString = Configuration["ConnectionStrings:DealershipEntities"];
             services.AddDbContext<Entities.DealershipContext>(options =>
                 options.UseSqlServer(DealershipConnectionString));
+
+            services.AddScoped<IVehicleRepository, VehicleRepository>();
 
         }
 

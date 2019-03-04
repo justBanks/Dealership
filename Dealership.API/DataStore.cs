@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Dealership.API
 {
     public static class DataStore
-    {
+     {
         public static List<Vehicle> Vehicles = new List<Vehicle>
         {
             new Vehicle {

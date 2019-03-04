@@ -11,9 +11,9 @@ namespace Dealership.API.Controllers
     [Authorize]
     public class VehiclesController : Controller
     {
-        private IVehicleRepository _repo = new VehicleRepository();
+        private IVehicleRepository _repo;
 
-        //public VehiclesController(IVehicleRepository repo) { _repo = repo; }
+        public VehiclesController(IVehicleRepository repo) { _repo = repo; }
         //public VehiclesController() { }
 
         public List<Vehicle> Get()
